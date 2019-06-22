@@ -4,6 +4,7 @@ import os
 import datetime
 
 from input_handlers import handle_keys
+from entity import Entity
 
 logger = logging.getLogger()
 logname = 'gameplay.log'
@@ -13,9 +14,11 @@ logging.basicConfig(filename=logname,
                     datefmt='%H:%M:%S',
                     level=logging.DEBUG)
 
-def gameloop(t: Terminal):
+def gameloop(t: Terminal, entities):
+    # For now, the player is simply the first entity.
+    player = entities[0]
+
     closed = False
-    playerpos = (t.width // 2, t.height // 2)
     frame_count = 0
     while not closed:
         logger.debug(f'frame: {frame_count}')
@@ -23,8 +26,9 @@ def gameloop(t: Terminal):
         # Clear the whole screen
         print(t.clear())
 
-        # Print the player
-        print(t.move(playerpos[1], playerpos[0]) + '@')
+        # Print the entities
+        for ent in entities:
+            print(t.move(ent.y, ent.x) + ent.glyph)
 
         inp = t.inkey()
         logger.debug('Key Input: ' + repr(inp))
@@ -42,10 +46,7 @@ def gameloop(t: Terminal):
 
         if move:
             # Update player position
-            playerpos = (
-                    playerpos[0] + move[0],
-                    playerpos[1] + move[1]
-                )
+            player.move(move[0], move[1])
 
         frame_count += 1
 
@@ -61,12 +62,21 @@ def main():
     logger.info("----------------------------------")
     #
 
+    # Create the world
+    entities = [
+            Entity(t.width // 2, t.height // 2, '@', None),
+            Entity(t.width // 2 + 5, t.height // 2 - 2, '$', None),
+        ]
+
+    # Ready the screen for drawing
     print(t.enter_fullscreen())
 
     with t.hidden_cursor():
         # Handle input immediately
         with t.cbreak():
-            gameloop(t)
+
+            # Enter the main game loop
+            gameloop(t, entities)
 
     print(t.exit_fullscreen())
 
