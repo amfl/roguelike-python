@@ -1,8 +1,10 @@
 from blessed import Terminal
 import logging
+import os
+import datetime
 
 logger = logging.getLogger()
-logname = 'foo.log'
+logname = 'gameplay.log'
 logging.basicConfig(filename=logname,
                     filemode='a',
                     format='%(asctime)s,%(msecs)d %(module)s %(levelno)s %(message)s',
@@ -13,7 +15,14 @@ def main():
     t = Terminal()
     print(t.enter_fullscreen())
 
-    logger.info("Terminal supports %d colors.", t.number_of_colors)
+    # Prelude
+    logger.info("----------------------------------")
+    logger.info("Starting new run.")
+    logger.info("Datetime: %s", datetime.datetime.now().isoformat())
+    logger.info("Revision: %s", os.getenv('REVISION'))
+    logger.info("Terminal colors: %d", t.number_of_colors)
+    logger.info("----------------------------------")
+    #
 
     closed = False
     playerpos = (0,0)

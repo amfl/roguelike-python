@@ -1,1 +1,0 @@
-This file gets written to from the logger. Use `tail -F` to follow it.
