@@ -5,6 +5,7 @@ import datetime
 
 from input_handlers import handle_keys
 from entity import Entity
+from render_functions import render_all
 
 logger = logging.getLogger()
 logname = 'gameplay.log'
@@ -26,9 +27,7 @@ def gameloop(t: Terminal, entities):
         # Clear the whole screen
         print(t.clear())
 
-        # Print the entities
-        for ent in entities:
-            print(t.move(ent.y, ent.x) + ent.glyph)
+        render_all(t, entities)
 
         inp = t.inkey()
         logger.debug('Key Input: ' + repr(inp))
