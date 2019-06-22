@@ -12,7 +12,8 @@ logging.basicConfig(filename=logname,
 def main():
     t = Terminal()
     print(t.enter_fullscreen())
-    print("Hello world")
+
+    logger.info("Terminal supports %d colors.", t.number_of_colors)
 
     closed = False
     playerpos = (0,0)
