@@ -11,6 +11,20 @@ logging.basicConfig(filename=logname,
                     datefmt='%H:%M:%S',
                     level=logging.DEBUG)
 
+def handle_keys(inp):
+    # Can't seem to get terminal.KEY_ESCAPE to work here
+    if inp in 'q':
+        return {'exit': True}
+
+    if inp in 'wk':
+        return {'move': (0,-1)}
+    elif inp in 'sj':
+        return {'move': (0,1)}
+    elif inp in 'ah':
+        return {'move': (-1,0)}
+    elif inp in 'dl':
+        return {'move': (1,0)}
+
 def gameloop(t: Terminal):
     closed = False
     playerpos = (t.width // 2, t.height // 2)
@@ -25,31 +39,25 @@ def gameloop(t: Terminal):
         print(t.move(playerpos[1], playerpos[0]) + '@')
 
         inp = t.inkey()
+        logger.debug('Key Input: ' + repr(inp))
+        action = handle_keys(inp)
+        logger.debug('Action: ' + repr(action))
+
+        exit = action.get('exit')
+        move = action.get('move')
 
         # Escape key doesn't work and I don't know why.
-        if inp in [t.KEY_ESCAPE, 'q']:
+        if exit:
             logger.info('Quitting...')
             closed = True
             return True
 
-        movediff = (0,0)
-        if inp in "wk":
-            movediff = (0,-1)
-        elif inp in "sj":
-            movediff = (0,1)
-        elif inp in "ah":
-            movediff = (-1,0)
-        elif inp in "dl":
-            movediff = (1,0)
-
-        logger.debug('You pressed ' + repr(inp))
-        logger.debug(playerpos)
-
-        # Update player position
-        playerpos = (
-                playerpos[0] + movediff[0],
-                playerpos[1] + movediff[1]
-            )
+        if move:
+            # Update player position
+            playerpos = (
+                    playerpos[0] + move[0],
+                    playerpos[1] + move[1]
+                )
 
         frame_count += 1
 
