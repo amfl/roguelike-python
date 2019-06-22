@@ -11,19 +11,7 @@ logging.basicConfig(filename=logname,
                     datefmt='%H:%M:%S',
                     level=logging.DEBUG)
 
-def main():
-    t = Terminal()
-    print(t.enter_fullscreen())
-
-    # Prelude
-    logger.info("----------------------------------")
-    logger.info("Starting new run.")
-    logger.info("Datetime: %s", datetime.datetime.now().isoformat())
-    logger.info("Revision: %s", os.getenv('REVISION'))
-    logger.info("Terminal colors: %d", t.number_of_colors)
-    logger.info("----------------------------------")
-    #
-
+def gameloop(t):
     closed = False
     playerpos = (0,0)
     frame_count = 0
@@ -36,25 +24,23 @@ def main():
         # Print the player
         print(t.move(playerpos[1], playerpos[0]) + '@')
 
-        # Handle input
-        with t.cbreak():
-            inp = t.inkey()
+        inp = t.inkey()
 
-            # Escape key doesn't work and I don't know why.
-            if inp in [t.KEY_ESCAPE, 'q']:
-                logger.info('Quitting...')
-                closed = True
-                return True
+        # Escape key doesn't work and I don't know why.
+        if inp in [t.KEY_ESCAPE, 'q']:
+            logger.info('Quitting...')
+            closed = True
+            return True
 
-            movediff = (0,0)
-            if inp in "wk":
-                movediff = (0,-1)
-            elif inp in "sj":
-                movediff = (0,1)
-            elif inp in "ah":
-                movediff = (-1,0)
-            elif inp in "dl":
-                movediff = (1,0)
+        movediff = (0,0)
+        if inp in "wk":
+            movediff = (0,-1)
+        elif inp in "sj":
+            movediff = (0,1)
+        elif inp in "ah":
+            movediff = (-1,0)
+        elif inp in "dl":
+            movediff = (1,0)
 
         logger.debug('You pressed ' + repr(inp))
         logger.debug(playerpos)
@@ -66,6 +52,25 @@ def main():
             )
 
         frame_count += 1
+
+def main():
+    t = Terminal()
+
+    # Prelude
+    logger.info("----------------------------------")
+    logger.info("Starting new run.")
+    logger.info("Datetime: %s", datetime.datetime.now().isoformat())
+    logger.info("Revision: %s", os.getenv('REVISION'))
+    logger.info("Terminal colors: %d", t.number_of_colors)
+    logger.info("----------------------------------")
+    #
+
+    print(t.enter_fullscreen())
+
+    with t.hidden_cursor():
+        # Handle input immediately
+        with t.cbreak():
+            gameloop(t)
 
     print(t.exit_fullscreen())
 
