@@ -13,7 +13,7 @@ logging.basicConfig(filename=logname,
 
 def gameloop(t):
     closed = False
-    playerpos = (0,0)
+    playerpos = (t.width // 2, t.height // 2)
     frame_count = 0
     while not closed:
         logger.debug(f'frame: {frame_count}')
