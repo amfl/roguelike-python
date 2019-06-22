@@ -11,7 +11,7 @@ logging.basicConfig(filename=logname,
                     datefmt='%H:%M:%S',
                     level=logging.DEBUG)
 
-def gameloop(t):
+def gameloop(t: Terminal):
     closed = False
     playerpos = (t.width // 2, t.height // 2)
     frame_count = 0
