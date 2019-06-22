@@ -9,7 +9,7 @@ def render_all(t: Terminal, entities):
         render_entity(t, ent)
 
 def render_entity(t: Terminal, ent: Entity):
-        print(t.move(ent.y, ent.x) + ent.glyph)
+        print(ent.color(t.move(ent.y, ent.x) + ent.glyph))
 
 # def clear_all(t: Terminal, entities):
 #     for ent in entities:

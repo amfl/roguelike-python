@@ -1,4 +1,5 @@
 from blessed import Terminal
+from blessed.formatters import FormattingString
 import logging
 import os
 import datetime
@@ -63,8 +64,16 @@ def main():
 
     # Create the world
     entities = [
-            Entity(t.width // 2, t.height // 2, '@', None),
-            Entity(t.width // 2 + 5, t.height // 2 - 2, '$', None),
+            Entity(
+                t.width // 2,
+                t.height // 2,
+                '@',
+                FormattingString(t.red, t.normal)),
+            Entity(
+                t.width // 2 + 5,
+                t.height // 2 - 2,
+                '$',
+                FormattingString(t.yellow, t.normal)),
         ]
 
     # Ready the screen for drawing
