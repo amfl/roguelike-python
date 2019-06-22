@@ -36,7 +36,7 @@ def gameloop(t: Terminal):
 
         # Escape key doesn't work and I don't know why.
         if exit:
-            logger.info('Quitting...')
+            logger.info('Quitting cleanly...')
             closed = True
             return True
 
