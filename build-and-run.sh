@@ -2,4 +2,4 @@
 # The image only needs to be rebuilt if the dependencies change.
 # The source code is not baked in, it is volume-mounted at runtime.
 
-docker build . -t pyrogue:latest && ./run.sh
+docker build . -t pyrogue:stretch && ./run.sh

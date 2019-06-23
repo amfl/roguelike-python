@@ -23,5 +23,5 @@ docker run --rm -it \
     -v "$(pwd)/src:/proj/src:ro" \
     -e "TERM=${TERM}" \
     -e "REVISION=${REVISION}" \
-    pyrogue:latest \
+    pyrogue:stretch \
     python /proj/src/main.py
