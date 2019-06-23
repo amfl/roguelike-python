@@ -9,6 +9,7 @@ from input_handlers import handle_keys
 from entity import Entity
 from render_functions import render_all
 from game_map import GameMap
+from fov_functions import initialize_fov, recompute_fov
 
 logger = logging.getLogger()
 logname = 'gameplay.log'
@@ -18,22 +19,33 @@ logging.basicConfig(filename=logname,
                     datefmt='%H:%M:%S',
                     level=logging.DEBUG)
 
-def game_loop(t: Terminal, game_map: GameMap, entities):
+def game_loop(
+        t: Terminal,
+        game_map: GameMap,
+        entities,
+        fov_map
+):
     # For now, the player is simply the first entity.
     player = entities[0]
 
     closed = False
     frame_count = 0
+    fov_recompute = True
     while not closed:
         logger.debug(f'frame: {frame_count}')
 
         # Clear the whole screen
         print(t.clear())
 
-        render_all(t, game_map, entities)
+        if fov_recompute:
+            recompute_fov(fov_map, player.x, player.y, 3)
+
+        render_all(t, game_map, entities, fov_map, fov_recompute)
 
         sys.stdout.flush()
 
+        # Read in input for a new turn.
+        fov_recompute = False
         inp = t.inkey()
         logger.debug('Key Input: ' + repr(inp))
         action = handle_keys(inp)
@@ -56,6 +68,7 @@ def game_loop(t: Terminal, game_map: GameMap, entities):
             if not game_map.is_blocked(destination[0], destination[1]):
                 # Update player position
                 player.move(move[0], move[1])
+                fov_recompute = True
 
         frame_count += 1
 
@@ -83,6 +96,8 @@ def main():
     game_map = GameMap(map_dimensions[0], map_dimensions[1])
     game_map.make_map()
 
+    fov_map = initialize_fov(game_map)
+
     entities = [
             Entity(
                 4, 4,
@@ -103,7 +118,7 @@ def main():
         with t.cbreak():
 
             # Enter the main game loop
-            game_loop(t, game_map, entities)
+            game_loop(t, game_map, entities, fov_map)
 
     print(t.exit_fullscreen())
 
