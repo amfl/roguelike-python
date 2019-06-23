@@ -3,10 +3,12 @@ from blessed.formatters import FormattingString
 import logging
 import os
 import datetime
+import sys
 
 from input_handlers import handle_keys
 from entity import Entity
 from render_functions import render_all
+from game_map import GameMap
 
 logger = logging.getLogger()
 logname = 'gameplay.log'
@@ -16,7 +18,7 @@ logging.basicConfig(filename=logname,
                     datefmt='%H:%M:%S',
                     level=logging.DEBUG)
 
-def gameloop(t: Terminal, entities):
+def game_loop(t: Terminal, game_map: GameMap, entities):
     # For now, the player is simply the first entity.
     player = entities[0]
 
@@ -28,7 +30,9 @@ def gameloop(t: Terminal, entities):
         # Clear the whole screen
         print(t.clear())
 
-        render_all(t, entities)
+        render_all(t, game_map, entities)
+
+        sys.stdout.flush()
 
         inp = t.inkey()
         logger.debug('Key Input: ' + repr(inp))
@@ -63,15 +67,19 @@ def main():
     #
 
     # Create the world
+    map_dimensions = (12, 12)
+
+    game_map = GameMap(map_dimensions[0], map_dimensions[1])
+
     entities = [
             Entity(
-                t.width // 2,
-                t.height // 2,
+                map_dimensions[0] // 2,
+                map_dimensions[1] // 2,
                 '@',
                 FormattingString(t.red, t.normal)),
             Entity(
-                t.width // 2 + 5,
-                t.height // 2 - 2,
+                map_dimensions[0] // 2 + 5,
+                map_dimensions[1] // 2 - 2,
                 '$',
                 FormattingString(t.yellow, t.normal)),
         ]
@@ -84,7 +92,7 @@ def main():
         with t.cbreak():
 
             # Enter the main game loop
-            gameloop(t, entities)
+            game_loop(t, game_map, entities)
 
     print(t.exit_fullscreen())
 
