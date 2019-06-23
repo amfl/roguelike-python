@@ -49,8 +49,13 @@ def game_loop(t: Terminal, game_map: GameMap, entities):
             return True
 
         if move:
-            # Update player position
-            player.move(move[0], move[1])
+            destination = (
+                player.x + move[0],
+                player.y + move[1],
+            )
+            if not game_map.is_blocked(destination[0], destination[1]):
+                # Update player position
+                player.move(move[0], move[1])
 
         frame_count += 1
 
