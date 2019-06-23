@@ -12,9 +12,9 @@ class GameMap:
 
         # Randomly draw some junk.
         # TODO: This will crash with small maps.
-        for y in range(3):
-            tiles[y+4][10].blocked = True
-            tiles[y+4][10].block_sight = True
+        for x in range(3):
+            tiles[x+4][10].blocked = True
+            tiles[x+4][10].block_sight = True
 
         return tiles
 
