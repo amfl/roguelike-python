@@ -1,4 +1,5 @@
 from game_objects import Tile
+from map_objects import Rect
 
 class GameMap:
     def __init__(self, width, height):
@@ -8,7 +9,7 @@ class GameMap:
 
     def initialize_tiles(self):
         # Start off with an empty floor everywhere
-        tiles = [[Tile(False) for y in range(self.height)] for x in range(self.width)]
+        tiles = [[Tile(True) for y in range(self.height)] for x in range(self.width)]
 
         # Randomly draw some junk.
         # TODO: This will crash with small maps.
@@ -23,3 +24,18 @@ class GameMap:
             return True
 
         return False
+
+    def make_map(self):
+        # Create two rooms for demonstration purposes
+        room1 = Rect(2, 2, 4, 4)
+        room2 = Rect(8, 2, 4, 4)
+
+        self.create_room(room1)
+        self.create_room(room2)
+
+    def create_room(self, room: Rect):
+        # Make all tiles in the rectangle passable
+        for x in range(room.x1, room.x2):
+            for y in range(room.y1, room.y2):
+                self.tiles[x][y].blocked = False
+                self.tiles[x][y].block_sight = False

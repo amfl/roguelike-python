@@ -68,18 +68,24 @@ def main():
     logger.info("Datetime: %s", datetime.datetime.now().isoformat())
     logger.info("Revision: %s", os.getenv('REVISION'))
     logger.info("Terminal colors: %d", t.number_of_colors)
+    logger.info("Terminal size: %dx%d", t.width, t.height)
     logger.info("----------------------------------")
     #
 
     # Create the world
-    map_dimensions = (12, 12)
+    map_dimensions = (20, 12)
+
+    if t.width < map_dimensions[0] or t.height < map_dimensions[1]:
+        logger.fatal("Terminal too small: Must be at least %dx%d in size.",
+               map_dimensions[0], map_dimensions[1])
+        sys.exit(1)
 
     game_map = GameMap(map_dimensions[0], map_dimensions[1])
+    game_map.make_map()
 
     entities = [
             Entity(
-                map_dimensions[0] // 2,
-                map_dimensions[1] // 2,
+                4, 4,
                 '@',
                 FormattingString(t.red, t.normal)),
             Entity(
