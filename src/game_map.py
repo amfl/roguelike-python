@@ -33,9 +33,22 @@ class GameMap:
         self.create_room(room1)
         self.create_room(room2)
 
+        # Join the two rooms with a tunnel
+        self.create_h_tunnel(3, 8, 3)
+
     def create_room(self, room: Rect):
         # Make all tiles in the rectangle passable
         for x in range(room.x1, room.x2):
             for y in range(room.y1, room.y2):
                 self.tiles[x][y].blocked = False
                 self.tiles[x][y].block_sight = False
+
+    def create_h_tunnel(self, x1, x2, y):
+        for x in range(min(x1, x2), max(x1, x2) + 1):
+            self.tiles[x][y].blocked = False
+            self.tiles[x][y].block_sight = False
+
+    def create_v_tunnel(self, y1, y2, x):
+        for y in range(min(y1, y2), max(y1, y2) + 1):
+            self.tiles[x][y].blocked = False
+            self.tiles[x][y].block_sight = False
