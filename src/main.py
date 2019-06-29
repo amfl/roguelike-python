@@ -7,7 +7,7 @@ import sys
 
 from input_handlers import handle_keys
 from entity import Entity
-from render_functions import render_all
+from render_functions import render_all, clear_all
 from game_map import GameMap
 from fov_functions import initialize_fov, recompute_fov
 
@@ -34,8 +34,7 @@ def game_loop(
     while not closed:
         logger.debug(f'frame: {frame_count}')
 
-        # Clear the whole screen
-        print(t.clear())
+        clear_all(t, entities)
 
         if fov_recompute:
             recompute_fov(fov_map, player.x, player.y, 3)

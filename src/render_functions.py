@@ -30,6 +30,10 @@ def render_all(
     }
 
     if fov_recompute:
+        """
+        Only bother redrawing all the tiles if the FOV was recomputed.
+        Otherwise they will still be on the screen from last time.
+        """
         for y in range(game_map.height):
             for x in range(game_map.width):
                 visible = tcod.map_is_in_fov(fov_map, x, y)
@@ -54,10 +58,11 @@ def render_all(
 def render_entity(t: Terminal, ent: Entity):
         print(ent.color(t.move(ent.y, ent.x) + ent.glyph))
 
-# def clear_all(t: Terminal, entities):
-#     for ent in entities:
-#         clear_entity(t, ent)
+def clear_all(t: Terminal, entities):
+    for ent in entities:
+        clear_entity(t, ent)
 
-# def clear_entity(t: Terminal, ent: Entity):
-#     # erase the character that represents this object
-#     print(t.move(ent.y, ent.x) + ' ')
+def clear_entity(t: Terminal, ent: Entity):
+    # erase the character that represents this object
+    # TODO: Bugs here. Should draw the tile underneath the entity instead.
+    print(t.move(ent.y, ent.x) + ' ')

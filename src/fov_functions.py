@@ -1,9 +1,15 @@
 import tcod
+import logging
+
+logger = logging.getLogger()
 
 def initialize_fov(game_map):
     """
     Called whenever the map changes shape.
     """
+
+    logger.debug("Recomputing FOV...")
+
     fov_map = tcod.map_new(game_map.width, game_map.height)
 
     for y in range(game_map.height):
