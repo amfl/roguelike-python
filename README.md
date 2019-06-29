@@ -10,7 +10,7 @@ used.
 Project is for prototyping and fun only, so I am not too concerned with
 addressing things like the docker image being 1GB+...
 
-See also, the same thing in rust: https://github.com/amfl/rustlike-revisited
+See also the same thing in rust: https://github.com/amfl/rustlike-revisited
 
 # Quickstart
 
