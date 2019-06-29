@@ -8,8 +8,6 @@ def initialize_fov(game_map):
     Called whenever the map changes shape.
     """
 
-    logger.debug("Recomputing FOV...")
-
     fov_map = tcod.map_new(game_map.width, game_map.height)
 
     for y in range(game_map.height):
@@ -20,4 +18,6 @@ def initialize_fov(game_map):
     return fov_map
 
 def recompute_fov(fov_map, x, y, radius, light_walls=True, algorithm=0):
+    logger.debug("Recomputing FOV...")
+
     tcod.map_compute_fov(fov_map, x, y, radius, light_walls, algorithm)
