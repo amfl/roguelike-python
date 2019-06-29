@@ -65,6 +65,8 @@ def game_loop(
                 player.y + move[1],
             )
             if not game_map.is_blocked(destination[0], destination[1]):
+                [e.push(game_map, move[0], move[1]) for e in entities if e.x == destination[0] and e.y == destination[1]]
+
                 # Update player position
                 player.move(move[0], move[1])
                 fov_recompute = True
@@ -107,6 +109,11 @@ def main():
                 map_dimensions[1] // 2 - 2,
                 '$',
                 FormattingString(t.yellow, t.normal)),
+            Entity(
+                3, 3,
+                '%',
+                FormattingString(t.blue, t.normal),
+                pushable=True)
         ]
 
     # Ready the screen for drawing
