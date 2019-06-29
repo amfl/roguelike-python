@@ -65,11 +65,16 @@ def game_loop(
                 player.y + move[1],
             )
             if not game_map.is_blocked(destination[0], destination[1]):
+                # Try to push anything that is there
                 [e.push(game_map, move[0], move[1]) for e in entities if e.x == destination[0] and e.y == destination[1]]
 
-                # Update player position
-                player.move(move[0], move[1])
-                fov_recompute = True
+                blocking_ent = Entity.get_blocking_entity_at_location(entities, destination[0], destination[1])
+                if blocking_ent:
+                    logger.debug("Bonked into a blocking entity: %s", blocking_ent.name)
+                else:
+                    # Update player position
+                    player.move(move[0], move[1])
+                    fov_recompute = True
 
         frame_count += 1
 
@@ -101,19 +106,20 @@ def main():
 
     entities = [
             Entity(
-                4, 4,
-                '@',
+                4, 4, '@', 'Player',
                 FormattingString(t.red, t.normal)),
             Entity(
                 map_dimensions[0] // 2 + 5,
                 map_dimensions[1] // 2 - 2,
-                '$',
+                '$', 'Mysterious Object',
                 FormattingString(t.yellow, t.normal)),
             Entity(
-                3, 3,
-                '%',
+                3, 3, '%', 'Crate',
                 FormattingString(t.blue, t.normal),
-                pushable=True)
+                pushable=True),
+            Entity(
+                10, 5, 'o', 'Goblin',
+                FormattingString(t.green, t.normal))
         ]
 
     # Ready the screen for drawing
