@@ -18,4 +18,9 @@ See also the same thing in rust: https://github.com/amfl/rustlike-revisited
 ./build-and-run.sh
 ```
 
+**Controls**
+
+- Movement: `wasd` or `hjkl`
+- Quit: `q`
+
 [rtr]: http://rogueliketutorials.com/tutorials/tcod/
