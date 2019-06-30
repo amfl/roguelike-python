@@ -1,5 +1,7 @@
 from blessed.formatters import FormattingString
 from game_map import GameMap
+from components.fighter import Fighter
+from components.ai import BasicMonster
 
 import logging
 logger = logging.getLogger()
@@ -16,7 +18,9 @@ class Entity:
             name: str,
             color: FormattingString,
             pushable: bool = False,
-            blocking: bool = True
+            blocking: bool = True,
+            fighter: Fighter = None,
+            ai: BasicMonster = None
     ):
         self.x = x
         self.y = y
@@ -25,6 +29,14 @@ class Entity:
         self.name = name
         self.pushable = pushable
         self.blocking = blocking
+        self.fighter = fighter
+        self.ai = ai
+
+        if self.fighter:
+            self.fighter.owner = self
+
+        if self.ai:
+            self.ai.owner = self
 
     def move(self, x: int, y: int):
         self.x += x

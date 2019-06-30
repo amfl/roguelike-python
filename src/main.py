@@ -5,11 +5,14 @@ import os
 import datetime
 import sys
 
-from input_handlers import handle_keys
+from components.ai import BasicMonster
+from components.fighter import Fighter
 from entity import Entity
-from render_functions import render_all, clear_all
-from game_map import GameMap
 from fov_functions import initialize_fov, recompute_fov
+from game_map import GameMap
+from game_states import GameStates
+from input_handlers import handle_keys
+from render_functions import render_all, clear_all
 
 logger = logging.getLogger()
 logname = 'gameplay.log'
@@ -31,6 +34,9 @@ def game_loop(
     closed = False
     frame_count = 0
     fov_recompute = True
+
+    game_state = GameStates.PLAYERS_TURN
+
     while not closed:
         logger.debug(f'frame: {frame_count}')
 
@@ -38,6 +44,13 @@ def game_loop(
 
         if fov_recompute:
             recompute_fov(fov_map, player.x, player.y, 3)
+
+        # Enemies move before the screen renders
+        if game_state == GameStates.ENEMY_TURN:
+            for e in entities:
+                if e.ai:
+                    e.ai.take_turn()
+            game_state = GameStates.PLAYERS_TURN
 
         render_all(t, game_map, entities, fov_map, fov_recompute)
 
@@ -59,7 +72,7 @@ def game_loop(
             closed = True
             return True
 
-        if move:
+        if move and game_state == GameStates.PLAYERS_TURN:
             destination = (
                 player.x + move[0],
                 player.y + move[1],
@@ -75,6 +88,7 @@ def game_loop(
                     # Update player position
                     player.move(move[0], move[1])
                     fov_recompute = True
+            game_state = GameStates.ENEMY_TURN
 
         frame_count += 1
 
@@ -107,7 +121,12 @@ def main():
     entities = [
             Entity(
                 4, 4, '@', 'Player',
-                FormattingString(t.red, t.normal)),
+                FormattingString(t.red, t.normal),
+                fighter=Fighter(
+                    hp=30,
+                    defense=2,
+                    power=5
+                )),
             Entity(
                 map_dimensions[0] // 2 + 5,
                 map_dimensions[1] // 2 - 2,
@@ -119,7 +138,13 @@ def main():
                 pushable=True),
             Entity(
                 10, 5, 'o', 'Goblin',
-                FormattingString(t.green, t.normal))
+                FormattingString(t.green, t.normal),
+                fighter=Fighter(
+                    hp=16,
+                    defense=1,
+                    power=3
+                ),
+                ai=BasicMonster())
         ]
 
     # Ready the screen for drawing
