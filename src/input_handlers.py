@@ -13,4 +13,5 @@ def handle_keys(inp: Keystroke):
         return {'move': (-1,0)}
     elif inp in 'dl':
         return {'move': (1,0)}
-
+    else:
+        return {'no_op': True}
