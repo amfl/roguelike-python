@@ -4,6 +4,8 @@ from components.fighter import Fighter
 from components.ai import BasicMonster
 
 import logging
+import math
+
 logger = logging.getLogger()
 
 class Entity:
@@ -61,3 +63,21 @@ class Entity:
                 if e.x == x_dest and e.y == y_dest:
                     return e
         return None
+
+    def move_towards(self, game_map: GameMap, entities, x_target: int, y_target: int):
+        dx = x_target - self.x
+        dy = y_target - self.y
+        distance = math.sqrt(dx ** 2 + dy ** 2)
+
+        # Normalize
+        dx = int(round(dx / distance))
+        dy = int(round(dy / distance))
+
+        if not (game_map.is_blocked(self.x + dx, self.y + dy) or
+                    Entity.get_blocking_entity_at_location(entities, self.x + dx, self.y + dy)):
+            self.move(dx, dy)
+
+    def distance_to(self, other):
+        dx = other.x - self.x
+        dy = other.y - self.y
+        return math.sqrt(dx ** 2 + dy ** 2)

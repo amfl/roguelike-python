@@ -49,7 +49,7 @@ def game_loop(
         if game_state == GameStates.ENEMY_TURN:
             for e in entities:
                 if e.ai:
-                    e.ai.take_turn()
+                    e.ai.take_turn(player, fov_map, game_map, entities)
             game_state = GameStates.PLAYERS_TURN
 
         render_all(t, game_map, entities, fov_map, fov_recompute)
