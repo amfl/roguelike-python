@@ -1,8 +1,7 @@
 from blessed.keyboard import Keystroke
 
 def handle_keys(inp: Keystroke):
-    # Can't seem to get terminal.KEY_ESCAPE to work here
-    if inp in 'q':
+    if inp in 'q' or inp.name == 'KEY_ESCAPE':
         return {'exit': True}
 
     if inp in 'wk':
